@@ -59,10 +59,14 @@ function PlantPage() {
     setPlantsData(updatedPlants);
   }
 
+  function handleSearch(e) {
+    setSearchValue(e.target.value);
+  }
+
   return (
     <main>
       <NewPlantForm addNewPlant={addNewPlant} />
-      <Search searchValue={searchValue} setSearchValue={setSearchValue} />
+      <Search handleSearch={handleSearch} />
       <PlantList
         onPriceChange={patchPriceChange}
         search={searchValue}
