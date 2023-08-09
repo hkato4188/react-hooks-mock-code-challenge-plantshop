@@ -7,6 +7,7 @@ function PlantPage() {
   const baseUrl = `http://localhost:6001/plants`;
   const [plantsData, setPlantsData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [outOfStockIds, setOutOfStockIds] = useState([]);
 
   useEffect(() => {
     fetch(`${baseUrl}`)
@@ -63,14 +64,31 @@ function PlantPage() {
     setSearchValue(e.target.value);
   }
 
+  const filteredPlants = plantsData.filter((p) => {
+    return searchValue === "" || p.name.toLowerCase().includes(searchValue);
+  });
+
+  function handleStockChange(e) {
+    const plantStockId = parseInt(e.target.value);
+    if (!outOfStockIds.includes(plantStockId)) {
+      setOutOfStockIds([...outOfStockIds, plantStockId]);
+    } else {
+      let inStockUpdate = outOfStockIds.filter(
+        (stockId) => stockId !== plantStockId
+      );
+      setOutOfStockIds(inStockUpdate);
+    }
+  }
+
   return (
     <main>
       <NewPlantForm addNewPlant={addNewPlant} />
       <Search handleSearch={handleSearch} />
       <PlantList
+        filteredPlants={filteredPlants}
+        onStockChange={handleStockChange}
+        outOfStockIds={outOfStockIds}
         onPriceChange={patchPriceChange}
-        search={searchValue}
-        plantsData={plantsData}
         onDelete={onDelete}
       />
     </main>
